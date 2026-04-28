@@ -37,97 +37,98 @@ RSpec.describe 'Regular expressions' do
   it 'can use `[]` with more complex circumstances to signify complex character groups' do
     words = ['catty', 'bratty', 'splat']
     expect(words.select { |word| word[/[bcmr]at/] }).to eq(__)
-    expect(words.select { |word| word[/[bcmr]+atty/] }).to eq(__)
+    expect(words.select { |word| word[/[bcmr]+atty/] }).to eq("catty")
     expect(words.select { |word| word[/[bcmr]+a(tty)*/] }).to eq(__)
     expect(words.select { |word| word[/[bcmr]+a[ty]*/] }).to eq(__)
   end
 
   it 'matches from the left first' do
-    expect('acdz az'[/az*/]).to eq(__)
+    expect('acdz az'[/az*/]).to eq("a")
   end
 
   it 'uses \d as a shortcut for a digit character class' do
-    expect('3 is the magic number'[/[0123456789]/]).to eq(__)
-    expect('3 is the magic number'[/\d/]).to eq(__)
+    expect('3 is the magic number'[/[0123456789]/]).to eq("3")
+    expect('3 is the magic number'[/\d/]).to eq("3")
   end
 
   it 'allows ranges in character classes' do
-    expect('3 is the magic number'[/[0-9]/]).to eq(__)
+    expect('3 is the magic number'[/[0-9]/]).to eq("3")
   end
 
   it 'uses \s as the shortcut for white space' do
-    expect("space: \t\n"[/\s+/]).to eq(__)
+    expect("space: \t\n"[/\s+ it 'uses \s as the shortcut for white space' do
+    expect("space: \t\n"[/\s+/]).to eq(__)/]).to eq(" \t\n")
   end
 
   it 'uses \w as the shortcut for word characters' do
-    expect('magic_number_1 = 3'[/[a-zA-Z0-9_]+/]).to eq(__)
-    expect('magic_number_1 = 3'[/\w+/]).to eq(__)
+    expect('magic_number_1 = 3'[/[a-zA-Z0-9_]+/]).to eq("magic_number_1")
+    expect('magic_number_1 = 3'[/\w+/]).to eq("magic_number_1")
   end
 
   it 'uses . as a shortcut for any character, except a new line' do
-    expect("abc\n123"[/a.+/]).to eq(__)
+    expect("abc\n123"[/a.+/]).to eq("abc")
   end
 
   it 'can negate a character class' do
-    expect('3 is the magic number'[/[^0-9]+/]).to eq(__)
+    expect('3 is the magic number'[/[^0-9]+/]).to eq(" is the magic number")
   end
 
   it 'uses capitals to negate shortcut characters' do
     # Capitals are less commonly used as they're not as comprehensible
-    expect('3 is the magic number'[/\D+/]).to eq(__)
-    expect("space: \t\n"[/\S+/]).to eq(__)
+    expect('3 is the magic number'[/\D+/]).to eq("is the magic number")
+    expect("space: \t\n"[/\S+/]).to eq("space:")
     # ... a programmer would most likely do
-    expect('magic_number_1 = 3'[/[^a-zA-Z0-9_]+/]).to eq(__)
-    expect('magic_number_1 = 42'[/\W+/]).to eq(__)
+    expect('magic_number_1 = 3'[/[^a-zA-Z0-9_]+/]).to eq(" = 3")
+    expect('magic_number_1 = 42'[/\W+/]).to eq(" = 42")
   end
 
   it 'uses \A to mark the start of the string' do
-    expect('start end'[/\Astart/]).to eq(__)
-    expect('start end'[/\Aend/]).to eq(__)
+    expect('start end'[/\Astart/]).to eq("start")
+    expect('start end'[/\Aend/]).to eq(nil)
   end
 
   it 'uses \z to mark the end of the string' do
-    expect('start end'[/end\z/]).to eq(__)
-    expect('start end'[/start\z/]).to eq(__)
+    expect('start end'[/end\z/]).to eq("end")
+    expect('start end'[/start\z/]).to eq(nil)
   end
 
   it 'uses ^ to mark the start of lines' do
-    expect("magic number 8\n3 magic number"[/^\d+/]).to eq(__)
+    expect("magic number 8\n3 magic number"[/^\d+/]).to eq("3")
   end
 
   it 'uses $ to mark the end of lines' do
-    expect("8 magic number\nmagic number 3"[/\d+$/]).to eq(__)
+    expect("8 magic number\nmagic number 3"[/\d+$/]).to eq("8")
   end
 
   it 'uses \b to anchor word boundaries' do
-    expect('wildcat cats'[/\bcat.+/]).to eq(__)
+    expect('wildcat cats'[/\bcat.+/]).to eq("cats")
   end
 
   it 'uses parentheses to group content' do
-    expect('yohoho'[/(ho)+/]).to eq(__)
+    expect('yohoho'[/(ho)+/]).to eq("hoho")
   end
 
   it 'also uses parentheses to capture content' do
-    expect('Gary, James'[/(\w+), (\w+)/, 1]).to eq(__)
-    expect('Gary, James'[/(\w+), (\w+)/, 2]).to eq(__)
+    expect('Gary, James'[/(\w+), (\w+)/, 1]).to eq("Gary")
+    expect('Gary, James'[/(\w+), (\w+)/, 2]).to eq("James")
   end
 
   it 'can use metacharacters such as `?:` inside the start of parentheses to change how content is captured' do
-    expect('Gary, James'[/(?:\w+), (\w+)/, 1]).to eq(__)
-    expect('Gary, James'[/(\w+), (?:\w+)/, 2]).to eq(__)
-    expect('Gary!, James'[/(?!\w+), (\w+)/, 2]).to eq(__)
+    expect('Gary, James'[/(?:\w+), (\w+)/, 1]).to eq("James")
+    expect('Gary, James'[/(\w+), (?:\w+)/, 2]).to eq(nil)
+    expect('Gary!, James'[/(?!\w+), (\w+)/, 2]).to eq("James")
   end
 
   it 'has special variables to access captures' do
-    expect('Name: Gary, James'[/(\w+), (\w+)/]).to eq(__)
-    expect($1).to eq(__)
-    expect($2).to eq(__)
+    expect('Name: Gary, James'[/(\w+), (\w+)/]).to eq("Gary, James")
+    expect($1).to eq("Gary")
+    expect($2).to eq("James")
   end
 
   it 'has a more intuitive named class method to access captures' do
-    expect('Name: Gary, James'[/(\w+), (\w+)/]).to eq(__)
-    expect(Regexp.last_match(1)).to eq(__)
-    expect(Regexp.last_match(2)).to eq(__)
+    expect('Name: Gary, James'[/(\w+), (\w+)/]).to eq("Gary, James")
+    expect(Regexp.last_match(1)).to eq("Gary")
+    expect(Regexp.last_match(2)).to eq("James")
     # Think why these variables reference 1 and 2 and not 0 and 1?
     # HINT: It's not what you think! Spend some time looking at the docs
   end
@@ -135,20 +136,20 @@ RSpec.describe 'Regular expressions' do
   it 'uses a | to offer alternatives for a group' do
     simpsons = /(Bart|Lisa|Maggie) Simpson/
 
-    expect('Bart Simpson'[simpsons]).to eq(__)
-    expect('Maggie Simpson'[simpsons]).to eq(__)
-    expect('Homer Simpson'[simpsons]).to eq(__)
+    expect('Bart Simpson'[simpsons]).to eq("Bart Simpson")
+    expect('Maggie Simpson'[simpsons]).to eq("Maggie Simpson")
+    expect('Homer Simpson'[simpsons]).to eq("Home Simpson")
   end
 
   it 'uses scan to find all instances that match a specific regex' do
-    expect('one two-three'.scan(/\w+/)).to eq(__)
+    expect('one two-three'.scan(/\w+/)).to eq(['one','two','three'])
   end
 
   it 'can use #sub to find and replace (a single instance), using regex' do
-    expect('one two-three'.sub(/(t\w*)/) { Regexp.last_match(1)[0, 1] }).to eq(__)
+    expect('one two-three'.sub(/(t\w*)/) { Regexp.last_match(1)[0, 1] }).to eq('one o-three')
   end
 
   it 'can use #gsub to find and replace (all instances), using regex' do
-    expect('one two-three'.gsub(/(t\w*)/) { Regexp.last_match(1)[0, 1] }).to eq(__)
+    expect('one two-three'.gsub(/(t\w*)/) { Regexp.last_match(1)[0, 1] }).to eq('one t-t')
   end
 end
