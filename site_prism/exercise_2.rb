@@ -13,13 +13,13 @@ page.load
 # Grab the heading of the page, type it into the field and then get the value of it
 
 # 1) Find the number box on the page
-
+number_box = page.number_box
 # 2) Find the text property of the heading
-
+heading = page.heading.text
 # 3) Type it into the field
-
+number_box.send_keys(heading)
 # 4) Find out the value inside the field
-
+puts"the value is #{number_box['value']} "
 # Wait and close
 sleep 2
 
