@@ -13,15 +13,18 @@ page.load
 # We are going to simulate a user picking the last option from a dropdown menu
 
 # 1) Find the original dropdown with its label
-
+dropdown = page.dropdown_list
 # 2) Click this and a bunch of new options should appear
-
+dropdown.click
+sleep 1
 # 3) Find all of the new dropdown options
-
+options = page.dropdown_options
 # 4) Click on the last item from our list
-
+options.last.click
+page.heading.click
 # 5) Check we have done this correctly by finding out the label of the displayed option
-
+text = dropdown.text
+puts"this is the lable of the option #{text}"
 # 6) Compare the visible label to the item on the list we stored from the dropdown options
 
 # Wait and close
